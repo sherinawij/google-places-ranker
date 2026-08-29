@@ -1,4 +1,5 @@
 import os
+import time
 import requests
 from dotenv import load_dotenv
 
@@ -21,8 +22,22 @@ def search_places(query, page_token=None):
 def search_all(query, max_pages=3):
     results = []
     token = None
-    for _ in range(max_pages):
-        data = search_places(query, page_token=token)
+    for i in range(max_pages):
+        try:
+            data = search_places(query, page_token=token)
+        except requests.HTTPError:
+            if i == 0:
+                # no responses yet, raise throws an exception
+                raise
+
+            # retry again
+            time.sleep(1)
+            try:
+                data = search_places(query, page_token=token)
+            except requests.HTTPError:
+                # returns partial response
+                break
+
         results.extend(normalize(data))
         token = data.get("nextPageToken")
         if not token:
@@ -40,3 +55,18 @@ def normalize(payload):
             "review_count": p.get("userRatingCount", 0),
         })
     return out
+
+# for testing
+# if __name__ == "__main__":
+#     import json
+
+#     print("key loaded:", bool(api_key))
+
+#     results = search_all("sushi montreal")
+
+#     print(f"\ngot {len(results)} results\n")
+#     for r in results[:60]:
+#         print(f"{r['rating']} ({r['review_count']:>5}) — {r['name']}")
+
+#     ids = [r["id"] for r in results]
+#     print(f"\nunique ids: {len(set(ids))} of {len(ids)}")
