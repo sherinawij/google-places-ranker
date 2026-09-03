@@ -1,0 +1,9 @@
+instance/
+*.db
+*.sqlite3
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.git/
+.gitignore
