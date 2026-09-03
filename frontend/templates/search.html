@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <select id="sort-option">
+        <option value="weighted">Weighted Score</option>
+        <option value="rating">Rating</option>
+        <option value="review">Review</option>
+    </select>
+    <h1>Results for {{query}}</h1>
+    <p>Number of results: {{ results | length }}</p>
+    <div id="places-id">
+        {% for place in results %}
+        <div>
+            <p>{{ place.name }}</p>
+            <p>{{ place.address }}</p>
+            <p>Rating: {{ place.rating }}</p>
+            <p>Review Count: {{ place.review_count }}</p>
+            <p>Score: {{ place.score }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        const results = {{ results | tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

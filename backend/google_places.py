@@ -2,6 +2,7 @@ import os
 import time
 import requests
 from dotenv import load_dotenv
+from ranking import add_score
 
 load_dotenv()
 api_key = os.getenv("GOOGLE_PLACES_API_KEY")
@@ -56,17 +57,19 @@ def normalize(payload):
         })
     return out
 
-# for testing
 # if __name__ == "__main__":
 #     import json
 
 #     print("key loaded:", bool(api_key))
 
 #     results = search_all("sushi montreal")
+#     add_score(results)
+#     sorted_results = sorted(results, key=lambda place: place["score"] if place["score"] is not None else -1, reverse=True)
+#     print(add_score(results)) 
+    # print(f"\ngot {len(results)} results\n")
+    # for r in results[:60]:
+    #     print(f"{r['ratin
+    # g']} ({r['review_count']:>5}) — {r['name']}")
 
-#     print(f"\ngot {len(results)} results\n")
-#     for r in results[:60]:
-#         print(f"{r['rating']} ({r['review_count']:>5}) — {r['name']}")
-
-#     ids = [r["id"] for r in results]
-#     print(f"\nunique ids: {len(set(ids))} of {len(ids)}")
+    # ids = [r["id"] for r in results]
+    # print(f"\nunique ids: {len(set(ids))} of {len(ids)}")
