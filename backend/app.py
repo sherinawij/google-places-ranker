@@ -1,4 +1,5 @@
 import requests
+import os
 from pathlib import Path
 from flask import Flask, request, render_template
 from extensions import db
@@ -25,4 +26,5 @@ def places_search():
     return render_template("search.html", results=sorted_results, query=query)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
