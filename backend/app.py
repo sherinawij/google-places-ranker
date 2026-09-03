@@ -1,3 +1,4 @@
+import requests
 from pathlib import Path
 from flask import Flask, request, render_template
 from extensions import db
