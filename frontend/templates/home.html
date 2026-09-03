@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Title</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <form id="search-form">
+    <input id="query" name="query" type="search">
+    <button class="btn" id="search-btn">Search</button>
+  </form>
+
+  <div id="search-results">
+
+  </div>
+
+  <div id="expanded-result">
+
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
