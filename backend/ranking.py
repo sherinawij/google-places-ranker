@@ -7,7 +7,11 @@ def weighted_score(rating, review_count, average_rating):
     return (v/(v+m))*R + (m/(v+m))*C
 
 def add_score(places):
-    ratings = [place['rating'] for place in places]
+    ratings = [] 
+    for place in places:
+        if place['rating'] is not None:
+            ratings.append(place['rating'])
+
     average_rating = sum(ratings)/len(ratings)
     for place in places:
         if(place['rating'] is None):
