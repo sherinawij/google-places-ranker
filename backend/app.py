@@ -6,10 +6,13 @@ from extensions import db
 from models.user import UserModel
 from google_places import search_all
 from ranking import add_score
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
 
 app = Flask(__name__, template_folder=FRONTEND/"templates" , static_folder=FRONTEND/"static")
+limiter = Limiter(key_func=get_remote_address, app=app, storage_uri="redis://localhost:6379")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 db.init_app(app)
 
@@ -18,6 +21,7 @@ def home():
     return render_template("home.html")
 
 @app.route("/search", methods=['GET'])
+@limiter.limit("20 per minute")
 def places_search():
     query = request.args.get("query")
     results = search_all(query)

@@ -3,6 +3,8 @@ import time
 import requests
 from dotenv import load_dotenv
 from ranking import add_score
+from cache import redis_client
+import json
 
 load_dotenv()
 api_key = os.getenv("GOOGLE_PLACES_API_KEY")
@@ -21,6 +23,12 @@ def search_places(query, page_token=None):
     return response.json()
 
 def search_all(query, max_pages=3):
+    cache_key = f"{query.strip().lower()}"
+    cached_results = redis_client.get(cache_key)
+    if cached_results is not None:
+        print("CACHE HIT")
+        return json.loads(cached_results)
+    print("CACHE MISS")
     results = []
     token = None
     for i in range(max_pages):
@@ -43,6 +51,7 @@ def search_all(query, max_pages=3):
         token = data.get("nextPageToken")
         if not token:
             break
+    redis_client.set(cache_key, json.dumps(results), ex=3600)
     return results
 
 def normalize(payload):
