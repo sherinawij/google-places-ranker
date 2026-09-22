@@ -12,6 +12,9 @@
     <input id="query" name="query" type="search">
     <button class="btn" id="search-btn">Search</button>
   </form>
+  {% if error %}
+    <p>{{ error }}</p>
+  {% endif %}
   <div id="search-results">
 
   </div>

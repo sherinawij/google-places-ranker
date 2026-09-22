@@ -6,6 +6,12 @@ from extensions import db
 from models.user import UserModel
 from google_places import search_all
 from ranking import add_score
+<<<<<<< Updated upstream
+=======
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+import time
+>>>>>>> Stashed changes
 
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
 
@@ -20,7 +26,11 @@ def home():
 @app.route("/search", methods=['GET'])
 def places_search():
     query = request.args.get("query")
+    if not query or not query.strip():
+        return render_template("home.html", error="Please enter a search query"), 400
     results = search_all(query)
+    elapsed = time.perf_counter() - start
+    print(f"Search took {elapsed:.4f} seconds")
     add_score(results)
     sorted_results = sorted(results, key=lambda place: place["score"] if place["score"] is not None else -1, reverse=True)
     return render_template("search.html", results=sorted_results, query=query)

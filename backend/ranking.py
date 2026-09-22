@@ -11,7 +11,10 @@ def add_score(places):
     for place in places:
         if place['rating'] is not None:
             ratings.append(place['rating'])
-
+    if not ratings:
+        for place in places:
+            place['score'] = None
+        return None
     average_rating = sum(ratings)/len(ratings)
     for place in places:
         if(place['rating'] is None):
