@@ -2,7 +2,6 @@ import os
 import time
 import requests
 from dotenv import load_dotenv
-from ranking import add_score
 from cache import redis_client
 import json
 
@@ -13,7 +12,7 @@ url = "https://places.googleapis.com/v1/places:searchText"
 def search_places(query, page_token=None, max_tries=3):
     headers = {'Content-Type': 'application/json', 
                'X-Goog-Api-Key': api_key, 
-               'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,nextPageToken'
+               'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.reviews,nextPageToken'
                }
     body = {"textQuery": query}
     if page_token:
@@ -30,7 +29,7 @@ def search_places(query, page_token=None, max_tries=3):
             time.sleep(wait_time)
 
 
-def search_all(query, max_pages=3):
+def search_all(query, max_pages=1):
     cache_key = f"{query.strip().lower()}"
     cached_results = redis_client.get(cache_key)
     if cached_results is not None:
@@ -64,6 +63,7 @@ def normalize(payload):
             "address": p.get("formattedAddress", ""),
             "rating": p.get("rating"),
             "review_count": p.get("userRatingCount", 0),
+            "reviews": p.get("reviews", [])
         })
     return out
 
