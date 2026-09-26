@@ -30,11 +30,12 @@ def places_search():
     if not query or not query.strip():
         return render_template("home.html", error="Please enter a search query"), 400
     results = search_all(query)
+    print(results)
     elapsed = time.perf_counter() - start
     print(f"Search took {elapsed:.4f} seconds")
     add_score(results)
     sorted_results = sorted(results, key=lambda place: place["score"] if place["score"] is not None else -1, reverse=True)
-    for place in sorted_results:
+    for place in sorted_results[:5]:
         place['summary'] = summarize_place(place)
     return render_template("search.html", results=sorted_results, query=query)
 

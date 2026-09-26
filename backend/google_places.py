@@ -12,7 +12,7 @@ url = "https://places.googleapis.com/v1/places:searchText"
 def search_places(query, page_token=None, max_tries=3):
     headers = {'Content-Type': 'application/json', 
                'X-Goog-Api-Key': api_key, 
-               'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.reviews,nextPageToken'
+               'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.reviews,places.currentOpeningHours.openNow,places.currentOpeningHours.weekdayDescriptions,nextPageToken'
                }
     body = {"textQuery": query}
     if page_token:
@@ -30,7 +30,7 @@ def search_places(query, page_token=None, max_tries=3):
 
 
 def search_all(query, max_pages=1):
-    cache_key = f"{query.strip().lower()}"
+    cache_key = f"places:v2:{query.strip().lower()}"
     cached_results = redis_client.get(cache_key)
     if cached_results is not None:
         print("CACHE HIT")
@@ -57,13 +57,16 @@ def search_all(query, max_pages=1):
 def normalize(payload):
     out = []
     for p in payload.get("places", []):
+        current_hours = p.get("currentOpeningHours", {})
         out.append({
             "id": p.get("id"),
             "name": p.get("displayName", {}).get("text", ""),
             "address": p.get("formattedAddress", ""),
             "rating": p.get("rating"),
             "review_count": p.get("userRatingCount", 0),
-            "reviews": p.get("reviews", [])
+            "reviews": p.get("reviews", []),
+            "open_now": current_hours.get("openNow"),
+            "opening_hours": current_hours.get("weekdayDescriptions", []),
         })
     return out
 

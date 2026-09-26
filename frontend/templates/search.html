@@ -22,6 +22,20 @@
             <p>Review Count: {{ place.review_count }}</p>
             <p>Score: {{ place.score }}</p>
             <p>Review: {{ place.summary }}</p>
+            {% if place.open_now is none %}
+                <p>Hours unavailable</p>
+            {% elif place.open_now %}
+                <p>Open Now</p>
+            {% else %}
+                <p>Closed</p>
+            {% endif %}
+            {% if place.opening_hours %}
+                <ul>
+                    {% for day in place.opening_hours %}
+                    <li>{{ day }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

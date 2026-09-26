@@ -52,11 +52,25 @@ function renderResults(places){
         review_count.textContent = `Review Count: ${place.review_count}`
         const score = document.createElement("p");
         score.textContent = `Score: ${place.score}`
+        const openNow = document.createElement("p");
+        if(place.open_now == null){
+            openNow.textContent = "Hours unavailable";
+        } else {
+            openNow.textContent = place.open_now ? "Open Now" : "Closed";
+        }
+        const hours = document.createElement("ul");
+        for(const day of place.opening_hours || []){
+            const li = document.createElement("li");
+            li.textContent = day;
+            hours.appendChild(li);
+        }
         div.appendChild(name);
         div.appendChild(address);
         div.appendChild(rating);
         div.appendChild(review_count);
         div.appendChild(score);
+        div.appendChild(openNow);
+        div.appendChild(hours);
         placesId.appendChild(div);
     }   
 }

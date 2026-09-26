@@ -10,8 +10,11 @@ def summarize_place(place):
         return "No reviews available."
     review_texts=""
     for review in reviews:
-        text = review["text"]["text"]
-        review_texts += text
+        text = review.get("text", {}).get("text", "")
+        if text:
+            review_texts += text + "\n"
+    if not review_texts:
+        return "No reviews available."
     client = Groq(api_key=api_key)
     try:
         response = client.chat.completions.create(
