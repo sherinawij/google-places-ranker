@@ -1,0 +1,57 @@
+:root {
+    --bg: #fef3c7;
+    --ink: #111;
+    --paper: #fff;
+    --muted: #555;
+    --yellow: #facc15;
+    --pink: #fb7185;
+    --purple: #a78bfa;
+    --green: #86efac;
+    --red: #fca5a5;
+    --silver: #d1d5db;
+    --bronze: #fdba74;
+    --border: 3px solid var(--ink);
+    --shadow: 5px 5px 0 var(--ink);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+    line-height: 1.4;
+}
+
+.container {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 28px 24px;
+}
+
+.box {
+    background: var(--paper);
+    border: var(--border);
+    box-shadow: var(--shadow);
+}
+
+.btn {
+    font: inherit;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform 0.08s, box-shadow 0.08s;
+}
+
+.btn:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 3px 3px 0 var(--ink);
+}
+
+.btn:active {
+    transform: translate(5px, 5px);
+    box-shadow: 0 0 0 var(--ink);
+}
