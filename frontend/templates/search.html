@@ -10,13 +10,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <select id="sort-option">
-        <option value="weighted">Weighted Score</option>
-        <option value="rating">Rating</option>
-        <option value="review">Review</option>
-    </select>
-    <h1>Results for {{query}}</h1>
-    <p>Number of results: {{ results | length }}</p>
+    <div class="container">
+    <header class="topbar">
+        <a class="logo" href="/">MAPRANK</a>
+        <form action="/search" method="GET" class="search-form">
+            <input class="search-input box" name="query" type="search" value="{{ query }}" autocomplete="off" required>
+            <button class="btn box search-btn">SEARCH →</button>
+        </form>
+    </header>
+    <h1 class="page-title">{{ query }}</h1>
+    <p class="subtitle">{{ results | length }} places found</p>
+    <div id="sort-option" class="tabs">
+        <button type="button" class="btn tab active" data-sort="weighted">BEST MATCH</button>
+        <button type="button" class="btn tab" data-sort="rating">RATING</button>
+        <button type="button" class="btn tab" data-sort="review">MOST REVIEWED</button>
+    </div>
     <div id="places-id">
         {% for place in results %}
         <div>
@@ -44,6 +52,7 @@
             {% endif %}
         </div>
         {% endfor %}
+    </div>
     </div>
     <script>
         const results = {{ results | tojson }};

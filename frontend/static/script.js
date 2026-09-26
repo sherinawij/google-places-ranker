@@ -1,8 +1,16 @@
 const sortOption = document.getElementById("sort-option")
 const placesId = document.getElementById("places-id")
 if (sortOption) {
-    sortOption.addEventListener("change", () => {
-        if(sortOption.value == "weighted"){
+    sortOption.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-sort]");
+        if(!button){
+            return;
+        }
+        for(const other of sortOption.querySelectorAll("button")){
+            other.classList.toggle("active", other === button);
+        }
+        const sortValue = button.dataset.sort;
+        if(sortValue == "weighted"){
             results.sort((a,b) =>{
                 if(a.score == null){
                     return 1;
@@ -13,7 +21,7 @@ if (sortOption) {
                 return b.score - a.score;
             });
         }
-        if(sortOption.value == "rating"){
+        if(sortValue == "rating"){
             results.sort((a,b) =>{
                 if(a.rating == null){
                     return 1;
@@ -24,7 +32,7 @@ if (sortOption) {
                 return b.rating - a.rating;
             });
         }
-        if(sortOption.value == "review"){
+        if(sortValue == "review"){
             results.sort((a,b) =>{
                 if(a.review_count == null){
                     return 1;
