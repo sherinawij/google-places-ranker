@@ -35,8 +35,22 @@ if (sortOption) {
                 return b.review_count - a.review_count;
             });
         } 
-        renderResults(results);
+        loadMissingSummaries(results.slice(0, 5));
     });
+}
+function loadMissingSummaries(places){
+    for(const place of places){
+        if(place.summary){
+            continue;
+        }
+        place.summary = "Loading summary...";
+        fetch(`/summary?query=${encodeURIComponent(query)}&id=${encodeURIComponent(place.id)}`)
+            .then(response => response.ok ? response.json() : Promise.reject())
+            .then(data => { place.summary = data.summary; })
+            .catch(() => { place.summary = "Summary temporarily unavailable."; })
+            .finally(() => renderResults(results));
+    }
+    renderResults(results);
 }
 function renderResults(places){
     placesId.innerHTML = "";
@@ -69,6 +83,11 @@ function renderResults(places){
         div.appendChild(rating);
         div.appendChild(review_count);
         div.appendChild(score);
+        if(place.summary){
+            const summary = document.createElement("p");
+            summary.textContent = `Review: ${place.summary}`
+            div.appendChild(summary);
+        }
         div.appendChild(openNow);
         div.appendChild(hours);
         placesId.appendChild(div);
