@@ -1,6 +1,15 @@
 const sortOption = document.getElementById("sort-option")
 const placesId = document.getElementById("places-id")
 const podium = document.getElementById("podium")
+const howBtn = document.getElementById("how-btn")
+const howPanel = document.getElementById("how-panel")
+if (howBtn) {
+    howBtn.addEventListener("click", () => {
+        howPanel.hidden = !howPanel.hidden;
+        howBtn.setAttribute("aria-expanded", String(!howPanel.hidden));
+        howBtn.classList.toggle("active", !howPanel.hidden);
+    });
+}
 if (sortOption) {
     sortOption.addEventListener("click", (event) => {
         const button = event.target.closest("button[data-sort]");
@@ -139,7 +148,7 @@ function renderRow(place, rank){
 
     const tags = el("div", "tags");
     if(place.rating != null){
-        tags.appendChild(el("span", "tag yellow", `★ ${place.rating.toFixed(1)}`));
+        tags.appendChild(el("span", "tag yellow", `★ ${place.rating.toFixed(1)} on Google`));
     }
     tags.appendChild(el("span", "tag", `${place.review_count.toLocaleString()} reviews`));
     tags.appendChild(statusTag(place));
@@ -147,8 +156,11 @@ function renderRow(place, rank){
     let scoreText = "–";
     if (place.score != null) {
         scoreText = place.score.toFixed(2);
-    }
-    row.appendChild(el("div", "row-score", scoreText));
+    }   
+    const score = el("div", "row-score");
+    score.appendChild(el("span", "score-label", "MAPRANK"));
+    score.appendChild(el("span", "score-value", scoreText));
+    row.appendChild(score);
     return row;
 }
 
@@ -159,10 +171,10 @@ function renderPodiumStep(place, rank){
     card.appendChild(el("h2", "pod-name", place.name));
     const stats = [];
     if(place.rating != null){
-        stats.push(`★ ${place.rating.toFixed(1)}`);
+        stats.push(`★ ${place.rating.toFixed(1)} on Google`);
     }
     if(place.score != null){
-        stats.push(place.score.toFixed(2));
+        stats.push(`MapRank ${place.score.toFixed(2)}`);
     }
     card.appendChild(el("p", "pod-stats", stats.join(" · ")));
     card.appendChild(statusTag(place));
