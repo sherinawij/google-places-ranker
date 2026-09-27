@@ -3,43 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{ query }} · MapRank</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <select id="sort-option">
-        <option value="weighted">Weighted Score</option>
-        <option value="rating">Rating</option>
-        <option value="review">Review</option>
-    </select>
-    <h1>Results for {{query}}</h1>
-    <p>Number of results: {{ results | length }}</p>
-    <div id="places-id">
-        {% for place in results %}
-        <div>
-            <p>{{ place.name }}</p>
-            <p>{{ place.address }}</p>
-            <p>Rating: {{ place.rating }}</p>
-            <p>Review Count: {{ place.review_count }}</p>
-            <p>Score: {{ place.score }}</p>
-            {% if place.summary %}
-                <p>Review: {{ place.summary }}</p>
-            {% endif %}
-            {% if place.open_now is none %}
-                <p>Hours unavailable</p>
-            {% elif place.open_now %}
-                <p>Open Now</p>
-            {% else %}
-                <p>Closed</p>
-            {% endif %}
-            {% if place.opening_hours %}
-                <ul>
-                    {% for day in place.opening_hours %}
-                    <li>{{ day }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+    <div class="container">
+    <header class="topbar">
+        <a class="logo" href="/">MAPRANK</a>
+        <form action="/search" method="GET" class="search-form">
+            <input class="search-input box" name="query" type="search" value="{{ query }}" autocomplete="off" required>
+            <button class="btn box search-btn">SEARCH →</button>
+        </form>
+    </header>
+    <h1 class="page-title">{{ query }}</h1>
+    <p class="subtitle">{{ results | length }} places found</p>
+    {% if results %}
+    <div class="toolbar">
+        <div id="sort-option" class="tabs">
+            <button type="button" class="btn tab active" data-sort="weighted">MAPRANK SCORE</button>
+            <button type="button" class="btn tab" data-sort="rating">GOOGLE RATING</button>
+            <button type="button" class="btn tab" data-sort="review">MOST REVIEWED</button>
         </div>
-        {% endfor %}
+        <div>
+            <button type="button" class="btn tab how-btn" id="how-btn" aria-expanded="false" aria-controls="how-panel">? HOW WE RANK</button>
+        </div>
+    </div>
+    <div class="how-panel box" id="how-panel" hidden>
+        <h2>How the MapRank score works</h2>
+        <p>A Google rating alone can mislead: a 5.0★ from 3 reviews might just be the owner's friends. The <b>MapRank score</b> adjusts each rating for how many reviews it's based on.</p>
+        <ul>
+            <li><b>Few reviews:</b> the rating is pulled toward the average rating of these results.</li>
+            <li><b>Many reviews:</b> the rating is trusted and barely changes. At 100 reviews it counts for half, at 1,000 reviews for about 90%.</li>
+        </ul>
+        <p>That's why a 4.8★ with 2,000 reviews can rank above a 5.0★ with 3.</p>
+    </div>
+    <div class="podium" id="podium"></div>
+    <div id="places-id"></div>
+    {% else %}
+    <div class="empty box">
+        <h2>No places found</h2>
+        <p>Try a different search, like "pizza montreal".</p>
+    </div>
+    {% endif %}
     </div>
     <script>
         const results = {{ results | tojson }};
