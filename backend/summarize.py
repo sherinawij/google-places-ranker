@@ -29,7 +29,7 @@ def summarize_place(place):
         response = client.chat.completions.create(
             model="openai/gpt-oss-20b",
             messages=[
-                {"role": "user", "content": f"Summarize the following customer reviews in one sentence: <reviews>{review_texts}</reviews>"}
+                {"role": "user", "content": f"Summarize the following customer reviews in one sentence under 20 words: <reviews>{review_texts}</reviews>"}
             ]
         )
         summary = response.choices[0].message.content
