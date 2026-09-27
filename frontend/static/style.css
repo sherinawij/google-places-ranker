@@ -285,3 +285,161 @@ body {
 .pod-1 .pod-block { height: 220px; background: var(--yellow); }
 .pod-2 .pod-block { height: 170px; background: var(--silver); }
 .pod-3 .pod-block { height: 130px; background: var(--bronze); }
+
+.hero h1 {
+    margin: 12vh 0 16px;
+    font-size: clamp(48px, 9vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+}
+
+.hero p {
+    max-width: 620px;
+    margin: 0;
+    font-size: 19px;
+    font-weight: 500;
+}
+
+.examples {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 32px;
+    font-weight: 700;
+}
+
+.chip {
+    padding: 8px 14px;
+    background: var(--yellow);
+    text-decoration: none;
+}
+
+.chip:nth-of-type(2) { background: var(--green); }
+.chip:nth-of-type(3) { background: var(--purple); }
+
+.empty {
+    margin-top: 30px;
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.empty h2 {
+    margin: 0 0 6px;
+    font-size: 28px;
+}
+
+.empty p {
+    margin: 0;
+    font-weight: 500;
+}
+
+@media (max-width: 700px) {
+    .container {
+        padding: 20px 16px;
+    }
+
+    .topbar {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .logo {
+        align-self: flex-start;
+    }
+
+    .search-form {
+        gap: 12px;
+    }
+
+    .search-btn {
+        padding: 12px 14px;
+    }
+
+    .page-title {
+        margin-top: 24px;
+        font-size: 32px;
+    }
+
+    .tabs {
+        gap: 8px;
+    }
+
+    .tab {
+        padding: 6px 9px;
+        font-size: 13px;
+    }
+
+    .podium {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 18px;
+    }
+
+    .pod {
+        display: flex;
+        flex: none;
+        align-items: stretch;
+    }
+
+    .pod-1 { order: 1; }
+    .pod-2 { order: 2; }
+    .pod-3 { order: 3; }
+
+    .pod-card {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+        text-align: left;
+    }
+
+    .pod .pod-block {
+        order: -1;
+        flex: none;
+        width: 64px;
+        height: auto;
+        margin-right: 12px;
+        place-items: center;
+        padding: 0;
+        font-size: 36px;
+    }
+
+    .row {
+        grid-template-columns: 44px 1fr;
+        gap: 12px;
+    }
+
+    .row-rank {
+        grid-row: span 3;
+        align-self: start;
+        font-size: 28px;
+    }
+
+    .tags,
+    .row-score {
+        grid-column: 2;
+    }
+
+    .row-score {
+        justify-self: start;
+        padding: 4px 12px;
+        font-size: 20px;
+    }
+}
+
+.summarize-btn {
+    margin-top: 8px;
+    padding: 3px 10px;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    color: var(--ink);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.summarize-btn:hover {
+    background: var(--purple);
+}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document Title</title>
+  <title>MapRank</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -15,20 +15,23 @@
     <header class="topbar">
       <a class="logo" href="/">MAPRANK</a>
       <form action="/search" method="GET" id="search-form" class="search-form">
-        <input class="search-input box" id="query" name="query" type="search" placeholder="Search a place, e.g. bakery montreal" autocomplete="off" required>
+        <input class="search-input box" id="query" name="query" type="search" placeholder="Search places…" autocomplete="off" required>
         <button class="btn box search-btn" id="search-btn">SEARCH →</button>
       </form>
     </header>
     {% if error %}
       <p class="error box">{{ error }}</p>
     {% endif %}
-  </div>
-  <div id="search-results">
-
-  </div>
-
-  <div id="expanded-result">
-
+    <main class="hero">
+      <h1>Top places,<br>ranked right.</h1>
+      <p>Ratings weighted by review count, so a 5.0 with 3 reviews doesn't beat a 4.8 with 2,000. Plus AI summaries of what people actually say.</p>
+      <div class="examples">
+        <span>TRY:</span>
+        <a class="btn box chip" href="/search?query=bakery+montreal">BAKERY MONTREAL</a>
+        <a class="btn box chip" href="/search?query=ramen+toronto">RAMEN TORONTO</a>
+        <a class="btn box chip" href="/search?query=coffee+vancouver">COFFEE VANCOUVER</a>
+      </div>
+    </main>
   </div>
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>

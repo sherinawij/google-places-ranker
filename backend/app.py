@@ -37,7 +37,7 @@ def places_search():
     print(f"Search took {elapsed:.4f} seconds")
     add_score(results)
     sorted_results = sorted(results, key=lambda place: place["score"] if place["score"] is not None else -1, reverse=True)
-    top_places = sorted_results[:5]
+    top_places = sorted_results[:3]
     with ThreadPoolExecutor(max_workers=len(top_places) or 1) as executor:
         summaries = executor.map(summarize_place, top_places)
     for place, summary in zip(top_places, summaries):

@@ -44,7 +44,10 @@ if (sortOption) {
                 return b.review_count - a.review_count;
             });
         } 
-        loadMissingSummaries(results.slice(0, 5));
+        for(const place of results){
+            place.rowSummaryOpen = false;
+        }
+        loadMissingSummaries(results.slice(0, 3));
     });
 }
 function loadMissingSummaries(places){
@@ -117,8 +120,16 @@ function renderRow(place, rank){
     const info = el("div", "row-info");
     info.appendChild(el("h2", "row-name", place.name));
     info.appendChild(el("p", "row-address", place.address));
-    if(place.summary){
+    if(place.rowSummaryOpen && place.summary){
         info.appendChild(summaryText(place, "row-summary"));
+    } else {
+        const summarize = el("button", "summarize-btn", "📋 SUMMARIZE");
+        summarize.type = "button";
+        summarize.addEventListener("click", () => {
+            place.rowSummaryOpen = true;
+            loadMissingSummaries([place]);
+        });
+        info.appendChild(summarize);
     }
     const hours = todayHours(place);
     if(hours){

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{ query }} · MapRank</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -20,6 +20,7 @@
     </header>
     <h1 class="page-title">{{ query }}</h1>
     <p class="subtitle">{{ results | length }} places found</p>
+    {% if results %}
     <div id="sort-option" class="tabs">
         <button type="button" class="btn tab active" data-sort="weighted">BEST MATCH</button>
         <button type="button" class="btn tab" data-sort="rating">RATING</button>
@@ -27,6 +28,12 @@
     </div>
     <div class="podium" id="podium"></div>
     <div id="places-id"></div>
+    {% else %}
+    <div class="empty box">
+        <h2>No places found</h2>
+        <p>Try a different search, like "pizza montreal".</p>
+    </div>
+    {% endif %}
     </div>
     <script>
         const results = {{ results | tojson }};
