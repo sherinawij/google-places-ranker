@@ -139,3 +139,149 @@ body {
     background: var(--purple);
     box-shadow: 4px 4px 0 var(--ink);
 }
+
+.row {
+    display: grid;
+    grid-template-columns: 60px 1fr 260px 90px;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 18px;
+    padding: 16px;
+    box-shadow: 6px 6px 0 var(--ink);
+}
+
+.row-rank {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.row-name {
+    margin: 0;
+    font-size: 19px;
+}
+
+.row-address {
+    margin: 2px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.row-summary {
+    margin: 8px 0 0;
+    font-size: 14px;
+}
+
+.row-hours {
+    margin: 6px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.loading {
+    color: var(--muted);
+    font-style: italic;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag {
+    padding: 2px 8px;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.tag.yellow { background: var(--yellow); }
+.tag.green { background: var(--green); }
+.tag.red { background: var(--red); }
+
+.row-score {
+    padding: 8px 0;
+    background: var(--purple);
+    border: var(--border);
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.podium {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 34px;
+}
+
+.pod {
+    flex: 0 1 300px;
+    min-width: 0;
+    text-align: center;
+}
+
+.pod-card {
+    margin-bottom: 14px;
+    padding: 12px;
+}
+
+.pod-name {
+    margin: 0;
+    font-size: 17px;
+}
+
+.pod-stats {
+    margin: 2px 0 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.pod-summary {
+    display: -webkit-box;
+    margin: 10px 0 0;
+    overflow: hidden;
+    font-size: 13px;
+    text-align: left;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.pod-card.expandable {
+    cursor: pointer;
+}
+
+.pod-card.expanded .pod-summary {
+    display: block;
+    -webkit-line-clamp: unset;
+}
+
+.pod-toggle {
+    margin-top: 8px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.pod-block {
+    display: grid;
+    place-items: start center;
+    padding-top: 12px;
+    border: var(--border);
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.pod-1 .pod-block { height: 220px; background: var(--yellow); }
+.pod-2 .pod-block { height: 170px; background: var(--silver); }
+.pod-3 .pod-block { height: 130px; background: var(--bronze); }

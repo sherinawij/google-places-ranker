@@ -25,34 +25,8 @@
         <button type="button" class="btn tab" data-sort="rating">RATING</button>
         <button type="button" class="btn tab" data-sort="review">MOST REVIEWED</button>
     </div>
-    <div id="places-id">
-        {% for place in results %}
-        <div>
-            <p>{{ place.name }}</p>
-            <p>{{ place.address }}</p>
-            <p>Rating: {{ place.rating }}</p>
-            <p>Review Count: {{ place.review_count }}</p>
-            <p>Score: {{ place.score }}</p>
-            {% if place.summary %}
-                <p>Review: {{ place.summary }}</p>
-            {% endif %}
-            {% if place.open_now is none %}
-                <p>Hours unavailable</p>
-            {% elif place.open_now %}
-                <p>Open Now</p>
-            {% else %}
-                <p>Closed</p>
-            {% endif %}
-            {% if place.opening_hours %}
-                <ul>
-                    {% for day in place.opening_hours %}
-                    <li>{{ day }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
+    <div class="podium" id="podium"></div>
+    <div id="places-id"></div>
     </div>
     <script>
         const results = {{ results | tojson }};
