@@ -65,7 +65,7 @@ function loadMissingSummaries(places){
             continue;
         }
         place.summary = "Loading summary...";
-        fetch(`/summary?query=${encodeURIComponent(query)}&id=${encodeURIComponent(place.id)}`)
+        fetch(`/summary?query=${encodeURIComponent(query)}&id=${encodeURIComponent(place.id)}&pages=${pages}`)
             .then(response => response.ok ? response.json() : Promise.reject())
             .then(data => { place.summary = data.summary; })
             .catch(() => { place.summary = "Summary temporarily unavailable."; })

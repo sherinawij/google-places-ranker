@@ -63,6 +63,7 @@
     <script>
         const results = {{ results | tojson }};
         const query = {{ query | tojson }};
+        const pages = {{ pages }};
     </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

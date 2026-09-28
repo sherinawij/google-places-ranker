@@ -25,17 +25,20 @@ db.init_app(app)
 def home():
     return render_template("home.html")
 
+def read_pages():
+    try:
+        pages = int(request.args.get("pages", 1))
+    except ValueError:
+        pages = 1
+    return max(1, min(pages, MAX_PAGES))
+
 @app.route("/search", methods=['GET'])
 @limiter.limit("20 per minute")
 def places_search():
     start = time.perf_counter()
     query = request.args.get("query")
-    try:
-        pages = int(request.args.get("pages", 1))
-    except ValueError:
-        pages = 1
+    pages = read_pages()
     open_only = False
-    pages = max(1, min(pages, MAX_PAGES))
     if request.args.get("open_now") == "true":
         open_only = True
     else:
@@ -68,8 +71,7 @@ def place_summary():
     place_id = request.args.get("id")
     if not query or not place_id:
         return {"error": "query and id are required"}, 400
-    # look the place up server-side so clients can't send arbitrary text to Groq
-    places, _ = search_all(query)
+    places, _ = search_all(query, read_pages())
     place = next((p for p in places if p["id"] == place_id), None)
     if place is None:
         return {"error": "place not found"}, 404
