@@ -8,7 +8,7 @@ api_key = os.getenv("GROQ_API_KEY")
 # fail fast on rate limits instead of the SDK's silent retries
 client = Groq(api_key=api_key, max_retries=0, timeout=10)
 MAX_REVIEW_CHARS = 400
-SUMMARY_TTL = 1 * 3600
+SUMMARY_TTL = 7 * 24 * 3600
 
 def summarize_place(place):
     cache_key = f"summary:{place.get('id')}"

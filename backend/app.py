@@ -29,6 +29,11 @@ def home():
 def places_search():
     start = time.perf_counter()
     query = request.args.get("query")
+    open_only = False
+    if request.args.get("open_now") == "true":
+        open_only = True
+    else:
+        open_only = False
     if not query or not query.strip():
         return render_template("home.html", error="Please enter a search query"), 400
     results = search_all(query)
@@ -36,13 +41,20 @@ def places_search():
     elapsed = time.perf_counter() - start
     print(f"Search took {elapsed:.4f} seconds")
     add_score(results)
+    if open_only:
+        new_results = []
+        for place in results:
+            if place["open_now"] == True:
+                new_results.append(place)
+                print(place)
+        results = new_results
     sorted_results = sorted(results, key=lambda place: place["score"] if place["score"] is not None else -1, reverse=True)
     top_places = sorted_results[:3]
     with ThreadPoolExecutor(max_workers=len(top_places) or 1) as executor:
         summaries = executor.map(summarize_place, top_places)
     for place, summary in zip(top_places, summaries):
         place['summary'] = summary
-    return render_template("search.html", results=sorted_results, query=query)
+    return render_template("search.html", results=sorted_results, query=query, open_only=open_only)
 
 @app.route("/summary", methods=['GET'])
 @limiter.limit("30 per minute")

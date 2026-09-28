@@ -28,6 +28,11 @@
             <button type="button" class="btn tab" data-sort="review">MOST REVIEWED</button>
         </div>
         <div>
+            {% if open_only %}
+                <a class="btn tab active" href="/search?query={{ query | urlencode }}">OPEN NOW ✕</a>
+            {% else %}
+                <a class="btn tab" href="/search?query={{ query | urlencode }}&open_now=true">OPEN NOW</a>
+            {% endif %}
             <button type="button" class="btn tab how-btn" id="how-btn" aria-expanded="false" aria-controls="how-panel">? HOW WE RANK</button>
         </div>
     </div>
