@@ -525,20 +525,21 @@ body {
 }
 
 .map-link {
-      display: inline-block;
-      margin-top: 8px;
-      color: var(--ink);
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: underline;
-  }   
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: underline;
+}   
 .map-link:hover {
-      background: var(--yellow);
+    background: var(--yellow);
+}
 .load-more {
-      display: block;
-      width: fit-content;
-      margin: 10px auto 40px;
-      padding: 12px 28px;
-      background: var(--yellow);
-      text-decoration: none;
-  }
+    display: block;
+    width: fit-content;
+    margin: 10px auto 40px;
+    padding: 12px 28px;
+    background: var(--yellow);
+    text-decoration: none;
+}
