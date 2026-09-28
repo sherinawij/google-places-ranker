@@ -57,9 +57,17 @@ body {
 }
 
 .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     align-items: stretch;
     gap: 16px;
+    /* stretch the background over the container's side padding */
+    margin: 0 -24px;
+    padding: 12px 24px 16px;
+    background: var(--bg);
+    border-bottom: var(--border);
 }
 
 .logo {
@@ -149,6 +157,7 @@ body {
 }
 
 .row {
+    scroll-margin-top: 100px;
     display: grid;
     grid-template-columns: 60px 1fr 260px 90px;
     gap: 16px;
@@ -399,20 +408,32 @@ body {
     }
 
     .topbar {
-        flex-direction: column;
-        gap: 12px;
+        gap: 8px;
+        margin: 0 -16px;
+        padding: 10px 16px 12px;
     }
 
     .logo {
-        align-self: flex-start;
+        padding: 6px 8px;
+        font-size: 15px;
+    }
+
+    .search-input {
+        padding: 10px 12px;
+        font-size: 16px;
+    }
+
+    .row {
+        scroll-margin-top: 90px;
     }
 
     .search-form {
-        gap: 12px;
+        gap: 8px;
     }
 
     .search-btn {
-        padding: 12px 14px;
+        padding: 10px 10px;
+        font-size: 14px;
     }
 
     .page-title {
@@ -513,4 +534,11 @@ body {
   }   
 .map-link:hover {
       background: var(--yellow);
+.load-more {
+      display: block;
+      width: fit-content;
+      margin: 10px auto 40px;
+      padding: 12px 28px;
+      background: var(--yellow);
+      text-decoration: none;
   }

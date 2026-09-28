@@ -133,6 +133,7 @@ function summaryText(place, className) {
 
 function renderRow(place, rank){
     const row = el("div", "row box");
+    row.id = `row-${rank}`;
     row.appendChild(el("div", "row-rank", rank));
 
     const info = el("div", "row-info");
@@ -249,4 +250,7 @@ function renderResults(places){
 
 if (placesId) {
     renderResults(results);
+    if (location.hash) {
+        document.getElementById(location.hash.slice(1))?.scrollIntoView();
+    }
 }

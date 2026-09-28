@@ -7,7 +7,7 @@ import json
 
 load_dotenv()
 api_key = os.getenv("GOOGLE_PLACES_API_KEY")
-
+RESULTS_TTL = 15 * 60
 url = "https://places.googleapis.com/v1/places:searchText"
 def search_places(query, page_token=None, max_tries=3):
     headers = {'Content-Type': 'application/json', 
@@ -29,30 +29,39 @@ def search_places(query, page_token=None, max_tries=3):
             time.sleep(wait_time)
 
 
-def search_all(query, max_pages=1):
-    cache_key = f"places:v2:{query.strip().lower()}"
-    cached_results = redis_client.get(cache_key)
-    if cached_results is not None:
-        print("CACHE HIT")
-        return json.loads(cached_results)
-    print("CACHE MISS")
-    results = []
+MAX_PAGES = 3  
+def fetch_page(query, page, page_token):
+    cache_key = f"places:v3:{query.strip().lower()}:page:{page}"
+    cached_page = redis_client.get(cache_key)
+    if cached_page is not None:
+        print(f"CACHE HIT page {page}")
+        return json.loads(cached_page)
+    print(f"CACHE MISS page {page}")
+    data = search_places(query, page_token=page_token)
+    entry = {"places": normalize(data), "next": data.get("nextPageToken")}
+    redis_client.set(cache_key, json.dumps(entry), ex=RESULTS_TTL)
+    return entry
+
+def search_all(query, pages=1):
+    places = []
     token = None
-    for i in range(max_pages):
+    has_more = False
+    for page in range(1, pages + 1):
         try:
-            data = search_places(query, page_token=token)
+            entry = fetch_page(query, page, token)
         except requests.RequestException:
-            if i == 0:
-                # no responses yet, raise throws an exception
+            if page == 1:
                 raise
             break
-
-        results.extend(normalize(data))
-        token = data.get("nextPageToken")
+        places.extend(entry["places"])
+        token = entry["next"]
+        if token:
+            has_more = True
+        else: 
+            has_more = False
         if not token:
             break
-    redis_client.set(cache_key, json.dumps(results), ex=3600)
-    return results
+    return places, has_more
 
 def normalize(payload):
     out = []
