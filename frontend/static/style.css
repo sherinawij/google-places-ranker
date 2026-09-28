@@ -495,3 +495,11 @@ body {
 .summarize-btn:hover {
     background: var(--purple);
 }
+.load-more {
+      display: block;
+      width: fit-content;
+      margin: 10px auto 40px;
+      padding: 12px 28px;
+      background: var(--yellow);
+      text-decoration: none;
+  }

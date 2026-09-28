@@ -29,9 +29,9 @@
         </div>
         <div>
             {% if open_only %}
-                <a class="btn tab active" href="/search?query={{ query | urlencode }}">OPEN NOW ✕</a>
+                <a class="btn tab active" href="/search?query={{ query | urlencode }}&pages={{ pages }}">OPEN NOW ✕</a>
             {% else %}
-                <a class="btn tab" href="/search?query={{ query | urlencode }}&open_now=true">OPEN NOW</a>
+                <a class="btn tab" href="/search?query={{ query | urlencode }}&pages={{ pages }}&open_now=true">OPEN NOW</a>
             {% endif %}
             <button type="button" class="btn tab how-btn" id="how-btn" aria-expanded="false" aria-controls="how-panel">? HOW WE RANK</button>
         </div>
@@ -47,6 +47,12 @@
     </div>
     <div class="podium" id="podium"></div>
     <div id="places-id"></div>
+    {% if has_more %}
+        <a class="btn box load-more"
+        href="/search?query={{ query | urlencode }}&pages={{ pages + 1 }}{% if open_only %}&open_now=true{% endif %}#row-{{ results | length + 1 }}">
+        LOAD MORE
+        </a>
+    {% endif %}
     {% else %}
     <div class="empty box">
         <h2>No places found</h2>
