@@ -7,7 +7,7 @@ import json
 
 load_dotenv()
 api_key = os.getenv("GOOGLE_PLACES_API_KEY")
-
+RESULTS_TTL = 15 * 60
 url = "https://places.googleapis.com/v1/places:searchText"
 def search_places(query, page_token=None, max_tries=3):
     headers = {'Content-Type': 'application/json', 
@@ -51,7 +51,7 @@ def search_all(query, max_pages=1):
         token = data.get("nextPageToken")
         if not token:
             break
-    redis_client.set(cache_key, json.dumps(results), ex=3600)
+    redis_client.set(cache_key, json.dumps(results), ex=RESULTS_TTL)
     return results
 
 def normalize(payload):
