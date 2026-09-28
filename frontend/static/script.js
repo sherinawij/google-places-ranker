@@ -83,7 +83,16 @@ function el(tag, className, text){
     }
     return node;
 }
-
+function mapLink(place){
+    if(!place.map_link){
+        return null;
+    }
+    const link = el("a", "map-link", "VIEW ON GOOGLE MAPS →");
+    link.href = place.map_link;
+    link.target = "_blank"
+    link.rel = "noopener"
+    return link
+}
 function todayHours(place) {
     const hours = place.opening_hours;
     if (!hours){
@@ -144,6 +153,10 @@ function renderRow(place, rank){
     if(hours){
         info.appendChild(el("p", "row-hours", `Today: ${hours}`));
     }
+    const link = mapLink(place);
+    if(link){
+        info.appendChild(link);
+    }
     row.appendChild(info);
 
     const tags = el("div", "tags");
@@ -178,6 +191,11 @@ function renderPodiumStep(place, rank){
     }
     card.appendChild(el("p", "pod-stats", stats.join(" · ")));
     card.appendChild(statusTag(place));
+    const link = mapLink(place);
+    if(link){
+        link.addEventListener("click", (event) => event.stopPropagation());
+        card.appendChild(link);
+    }
     if(place.summary){
         card.appendChild(summaryText(place, "pod-summary"));
         let loading;

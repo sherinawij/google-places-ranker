@@ -12,7 +12,7 @@ url = "https://places.googleapis.com/v1/places:searchText"
 def search_places(query, page_token=None, max_tries=3):
     headers = {'Content-Type': 'application/json', 
                'X-Goog-Api-Key': api_key, 
-               'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.reviews,places.currentOpeningHours.openNow,places.currentOpeningHours.weekdayDescriptions,nextPageToken'
+               'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.reviews,places.currentOpeningHours.openNow,places.googleMapsLinks,places.currentOpeningHours.weekdayDescriptions,nextPageToken'
                }
     body = {"textQuery": query}
     if page_token:
@@ -67,6 +67,7 @@ def normalize(payload):
             "reviews": p.get("reviews", []),
             "open_now": current_hours.get("openNow"),
             "opening_hours": current_hours.get("weekdayDescriptions", []),
+            "map_link": p.get("googleMapsLinks", {}).get("placeUri", ""),
         })
     return out
 

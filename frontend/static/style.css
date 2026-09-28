@@ -495,3 +495,15 @@ body {
 .summarize-btn:hover {
     background: var(--purple);
 }
+
+.map-link {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: underline;
+  }   
+.map-link:hover {
+      background: var(--yellow);
+  }
