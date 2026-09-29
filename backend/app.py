@@ -4,6 +4,7 @@ from pathlib import Path
 from flask import Flask, request, render_template
 from extensions import db
 from models.user import UserModel
+from models.favorite import FavoriteModel
 from google_places import search_all
 from ranking import add_score
 from flask_limiter import Limiter
@@ -18,8 +19,13 @@ FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
 
 app = Flask(__name__, template_folder=FRONTEND/"templates" , static_folder=FRONTEND/"static")
 limiter = Limiter(key_func=get_remote_address, app=app, storage_uri=REDIS_URL)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+# SQLite locally; set DATABASE_URL (e.g. Postgres) in production
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///database.db")
 db.init_app(app)
+
+# create any missing tables (doesn't change existing ones)
+with app.app_context():
+    db.create_all()
 
 @app.route("/")
 def home():
