@@ -42,6 +42,10 @@
                     {% if favorite.map_link %}
                         <a class="map-link" href="{{ favorite.map_link }}" target="_blank" rel="noopener">VIEW ON GOOGLE MAPS →</a>
                     {% endif %}
+                    <form class="fav-note" action="{{ url_for('save_note', place_id=favorite.place_id) }}" method="POST">
+                        <input name="note" value="{{ favorite.note }}" placeholder="Add a note…" maxlength="500">
+                        <button>SAVE</button>
+                    </form>
                 </div>
                 <form action="{{ url_for('remove_favorite', place_id=favorite.place_id) }}" method="POST">
                     <button class="btn box fav-remove">REMOVE</button>

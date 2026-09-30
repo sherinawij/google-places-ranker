@@ -172,6 +172,16 @@ def remove_favorite(place_id):
         return {"saved": False}
     return redirect(url_for("favorites"))
 
+@app.route("/favorites/<place_id>/note", methods=["POST"])
+@login_required
+def save_note(place_id):
+    favorite = FavoriteModel.query.filter_by(user_id=current_user.id, place_id=place_id).first()
+    if favorite is None:
+        return redirect(url_for("favorites"))
+    favorite.note = request.form.get("note", "").strip()[:500]
+    db.session.commit()
+    return redirect(url_for("favorites"))
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)

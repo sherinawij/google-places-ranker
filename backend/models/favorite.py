@@ -12,6 +12,7 @@ class FavoriteModel(db.Model):
     name = db.Column(db.String(255), nullable=False)
     address = db.Column(db.String(255), nullable=False, default="")
     map_link = db.Column(db.String(1024), nullable=False, default="")
+    note = db.Column(db.String(500), nullable=False, default="")
     created_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
 
     user = db.relationship("UserModel", back_populates="favorites")
