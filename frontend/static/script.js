@@ -3,6 +3,48 @@ const placesId = document.getElementById("places-id")
 const podium = document.getElementById("podium")
 const howBtn = document.getElementById("how-btn")
 const howPanel = document.getElementById("how-panel")
+function favoriteButton(place){
+    const saved = favoriteIds.includes(place.id);
+    let text = "♡ SAVE";
+    let className = "fav-btn";
+    if(saved){
+        text = "♥ SAVED";
+        className = "fav-btn saved";
+    }
+    if(!loggedIn){
+        const link = el("a", className, text);
+        link.href = "/login";
+        link.addEventListener("click", (event) => event.stopPropagation());
+        return link;
+    }
+    const button = el("button", className, text);
+    button.type = "button";
+    button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        let url = "/favorites";
+        let body = {place_id: place.id, name: place.name, address: place.address, map_link: place.map_link || ""};
+        if(saved){
+            url = `/favorites/${encodeURIComponent(place.id)}/remove`;
+            body = {};
+        }
+        fetch(url, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)})
+            .then(response => response.ok ? response.json() : Promise.reject())
+            .then(data => {
+                if(data.saved){
+                    favoriteIds.push(place.id);
+                } 
+                else{
+                    const index = favoriteIds.indexOf(place.id);
+                    if(index !== -1){
+                        favoriteIds.splice(index, 1);
+                    }
+                }
+                renderResults(results);
+            })
+            .catch(() => alert("Could not update favorites. Please try again."));
+    });
+    return button;
+}
 if (howBtn) {
     howBtn.addEventListener("click", () => {
         howPanel.hidden = !howPanel.hidden;
@@ -150,6 +192,7 @@ function renderRow(place, rank){
         });
         info.appendChild(summarize);
     }
+    info.appendChild(favoriteButton(place));
     const hours = todayHours(place);
     if(hours){
         info.appendChild(el("p", "row-hours", `Today: ${hours}`));
@@ -158,8 +201,8 @@ function renderRow(place, rank){
     if(link){
         info.appendChild(link);
     }
-    row.appendChild(info);
 
+    row.appendChild(info);
     const tags = el("div", "tags");
     if(place.rating != null){
         tags.appendChild(el("span", "tag yellow", `★ ${place.rating.toFixed(1)} on Google`));
@@ -197,6 +240,7 @@ function renderPodiumStep(place, rank){
         link.addEventListener("click", (event) => event.stopPropagation());
         card.appendChild(link);
     }
+    card.appendChild(favoriteButton(place));
     if(place.summary){
         card.appendChild(summaryText(place, "pod-summary"));
         let loading;

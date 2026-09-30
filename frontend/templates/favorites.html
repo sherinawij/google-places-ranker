@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My favorites · MapRank</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+    <header class="account-bar">
+        {% if current_user.is_authenticated %}
+            <span>Hi, <b>{{ current_user.name }}</b></span>
+            <a class="account-link" href="{{ url_for('favorites') }}">♥ FAVORITES</a>
+            <form action="{{ url_for('logout') }}" method="POST">
+                <button class="account-link">LOG OUT</button>
+            </form>
+        {% else %}
+            <a class="account-link" href="{{ url_for('login') }}">LOG IN</a>
+            <a class="account-link" href="{{ url_for('signup') }}">SIGN UP</a>
+        {% endif %}
+    </header>
+    <header class="topbar">
+        <a class="logo" href="/">MAPRANK</a>
+        <form action="/search" method="GET" class="search-form">
+            <input class="search-input box" name="query" type="search" placeholder="Search places…" autocomplete="off" required>
+            <button class="btn box search-btn">SEARCH →</button>
+        </form>
+    </header>
+    <h1 class="page-title">My favorites</h1>
+    <p class="subtitle">{{ favorites | length }} saved places</p>
+    {% if favorites %}
+        <div class="fav-list">
+        {% for favorite in favorites %}
+            <div class="fav-item box">
+                <div>
+                    <h2 class="row-name">{{ favorite.name }}</h2>
+                    <p class="row-address">{{ favorite.address }}</p>
+                    {% if favorite.map_link %}
+                        <a class="map-link" href="{{ favorite.map_link }}" target="_blank" rel="noopener">VIEW ON GOOGLE MAPS →</a>
+                    {% endif %}
+                    <form class="fav-note" action="{{ url_for('save_note', place_id=favorite.place_id) }}" method="POST">
+                        <input name="note" value="{{ favorite.note }}" placeholder="Add a note…" maxlength="500">
+                        <button>SAVE</button>
+                    </form>
+                </div>
+                <form action="{{ url_for('remove_favorite', place_id=favorite.place_id) }}" method="POST">
+                    <button class="btn box fav-remove">REMOVE</button>
+                </form>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty box">
+            <h2>No favorites yet</h2>
+            <p>Search for a place and save it to see it here.</p>
+        </div>
+    {% endif %}
+    </div>
+</body>
+</html>
