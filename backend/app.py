@@ -20,8 +20,10 @@ FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
 
 app = Flask(__name__, template_folder=FRONTEND/"templates" , static_folder=FRONTEND/"static")
 limiter = Limiter(key_func=get_remote_address, app=app, storage_uri=REDIS_URL)
-# SQLite locally; set DATABASE_URL (e.g. Postgres) in production
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///database.db")
+database_url = os.getenv("DATABASE_URL", "sqlite:///database.db")
+if database_url.startswith("postgresql://"):
+    database_url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 db.init_app(app)
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
