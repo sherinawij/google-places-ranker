@@ -2,7 +2,7 @@ import requests
 import os
 from pathlib import Path
 from flask import Flask, request, render_template, redirect, url_for
-from flask_login import LoginManager, login_user, logout_user, current_user
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from extensions import db
 from models.user import UserModel
 from models.favorite import FavoriteModel
@@ -29,6 +29,7 @@ if not app.config["SECRET_KEY"]:
     raise RuntimeError("SECRET_KEY is not set (add it to .env)")
 
 login_manager = LoginManager(app)
+login_manager.login_view = "login"
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -119,7 +120,11 @@ def places_search():
         summaries = executor.map(summarize_place, top_places)
     for place, summary in zip(top_places, summaries):
         place['summary'] = summary
-    return render_template("search.html", pages=pages, has_more=has_more, results=sorted_results, query=query, open_only=open_only)
+    fav_ids = []
+    if current_user.is_authenticated:
+        for fav in current_user.favorites:
+            fav_ids.append(fav.place_id)
+    return render_template("search.html", pages=pages, has_more=has_more, results=sorted_results, query=query, open_only=open_only, favorite_ids=fav_ids)
 
 @app.route("/summary", methods=['GET'])
 @limiter.limit("30 per minute")
@@ -133,6 +138,39 @@ def place_summary():
     if place is None:
         return {"error": "place not found"}, 404
     return {"summary": summarize_place(place)}
+
+@app.route("/favorites", methods=["GET"])
+@login_required
+def favorites():
+    favorites = FavoriteModel.query.filter_by(user_id=current_user.id).order_by(FavoriteModel.created_at.desc()).all()
+    return render_template("favorites.html", favorites=favorites)
+
+@app.route("/favorites", methods=["POST"])
+@login_required
+def add_favorite():
+    data = request.get_json(silent=True) or {}
+    place_id = data.get("place_id", "")
+    name = data.get("name", "")
+    if not place_id or not name:
+        return {"error": "place_id and name are required"}, 400
+    existing = FavoriteModel.query.filter_by(user_id=current_user.id, place_id=place_id).first()
+    if existing:
+        return {"saved": True}
+    favorite = FavoriteModel(user_id=current_user.id, place_id=place_id, name=name, address=data.get("address", ""), map_link=data.get("map_link", ""))
+    db.session.add(favorite)
+    db.session.commit()
+    return {"saved": True}
+
+@app.route("/favorites/<place_id>/remove", methods=["POST"])
+@login_required
+def remove_favorite(place_id):
+    favorite = FavoriteModel.query.filter_by(user_id=current_user.id, place_id=place_id).first()
+    if favorite:
+        db.session.delete(favorite)
+        db.session.commit()
+    if request.is_json:
+        return {"saved": False}
+    return redirect(url_for("favorites"))
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
