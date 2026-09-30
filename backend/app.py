@@ -2,6 +2,7 @@ import requests
 import os
 from pathlib import Path
 from flask import Flask, request, render_template
+from flask_login import LoginManager
 from extensions import db
 from models.user import UserModel
 from models.favorite import FavoriteModel
@@ -22,6 +23,16 @@ limiter = Limiter(key_func=get_remote_address, app=app, storage_uri=REDIS_URL)
 # SQLite locally; set DATABASE_URL (e.g. Postgres) in production
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///database.db")
 db.init_app(app)
+
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+if not app.config["SECRET_KEY"]:
+    raise RuntimeError("SECRET_KEY is not set (add it to .env)")
+
+login_manager = LoginManager(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.get(UserModel, int(user_id))
 
 # create any missing tables (doesn't change existing ones)
 with app.app_context():
