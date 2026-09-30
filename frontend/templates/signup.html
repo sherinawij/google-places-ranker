@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up · MapRank</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+    <header class="account-bar">
+        {% if current_user.is_authenticated %}
+            <span>Hi, <b>{{ current_user.name }}</b></span>
+            <form action="{{ url_for('logout') }}" method="POST">
+                <button class="account-link">LOG OUT</button>
+            </form>
+        {% else %}
+            <a class="account-link" href="{{ url_for('login') }}">LOG IN</a>
+            <a class="account-link" href="{{ url_for('signup') }}">SIGN UP</a>
+        {% endif %}
+    </header>
+    <header class="topbar">
+        <a class="logo" href="/">MAPRANK</a>
+        <form action="/search" method="GET" class="search-form">
+            <input class="search-input box" name="query" type="search" placeholder="Search places…" autocomplete="off" required>
+            <button class="btn box search-btn">SEARCH →</button>
+        </form>
+    </header>
+    <main class="auth">
+        <h1 class="page-title">Create an account</h1>
+        {% if error %}
+            <p class="error box">{{ error }}</p>
+        {% endif %}
+        <form class="auth-form" action="{{ url_for('signup') }}" method="POST">
+            <label for="name">NAME</label>
+            <input class="search-input box" id="name" name="name" type="text" value="{{ name or '' }}" autocomplete="username" maxlength="80" required>
+            <label for="email">EMAIL</label>
+            <input class="search-input box" id="email" name="email" type="email" value="{{ email or '' }}" autocomplete="email" maxlength="80" required>
+            <label for="password">PASSWORD</label>
+            <input class="search-input box" id="password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+            <button class="btn box auth-btn">SIGN UP →</button>
+        </form>
+        <p class="auth-link">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+    </main>
+    </div>
+</body>
+</html>

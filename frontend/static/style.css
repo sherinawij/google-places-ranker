@@ -399,6 +399,64 @@ body {
     width: fit-content;
     margin: 8px auto 0;
 }
+.account-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px;
+    margin: -12px 0 10px;
+    font-size: 13px;
+    font-weight: 500;
+}
+.account-bar form {
+    margin: 0;
+}
+.account-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    font: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.account-link:hover {
+    background: var(--yellow);
+}
+.auth {
+    max-width: 440px;
+    margin: 0 auto 60px;
+}
+.auth .error {
+    display: block;
+    margin: 0 0 18px;
+}
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.auth-form label {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+.auth-btn {
+    margin-top: 22px;
+    padding: 12px 22px;
+    background: var(--pink);
+    font-size: 17px;
+}
+.auth-link {
+    margin-top: 24px;
+    font-weight: 600;
+}
+.auth-link a {
+    color: var(--ink);
+    font-weight: 800;
+}
 @media (max-width: 700px) {
     .pod-card .map-link {
         margin-left: 0;

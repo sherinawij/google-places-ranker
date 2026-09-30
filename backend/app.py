@@ -1,8 +1,8 @@
 import requests
 import os
 from pathlib import Path
-from flask import Flask, request, render_template
-from flask_login import LoginManager
+from flask import Flask, request, render_template, redirect, url_for
+from flask_login import LoginManager, login_user, logout_user, current_user
 from extensions import db
 from models.user import UserModel
 from models.favorite import FavoriteModel
@@ -48,6 +48,46 @@ def read_pages():
     except ValueError:
         pages = 1
     return max(1, min(pages, MAX_PAGES))
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "GET":
+        return render_template("signup.html")
+    name = request.form.get("name", "").strip()
+    email = request.form.get("email", "").strip().lower()
+    password = request.form.get("password", "")
+    if not name or not email or not password:
+        return render_template("signup.html", error="Please fill in all fields."), 400
+    if "@" not in email:
+        return render_template("signup.html", error="Please enter a valid email."), 400
+    if len(password) < 8:
+        return render_template("signup.html", error="Password must be at least 8 characters."), 400
+    if UserModel.query.filter_by(email=email).first():
+        return render_template("signup.html", error="That email is already registered."), 400
+    if UserModel.query.filter_by(name=name).first():
+        return render_template("signup.html", error="That name is already taken."), 400
+    user = UserModel(name=name, email=email)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+    login_user(user)
+    return redirect(url_for("home"))
+@app.route("/logout", methods=["POST"])
+def logout():
+    logout_user()
+    return redirect(url_for("home"))
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.html")
+    email = request.form.get("email", "").strip().lower()
+    password = request.form.get("password", "")
+    user = UserModel.query.filter_by(email=email).first()
+    if user is None or not user.check_password(password):
+        return render_template("login.html", error="Invalid email or password.")
+    login_user(user)
+    return redirect(url_for("home"))
 
 @app.route("/search", methods=['GET'])
 @limiter.limit("20 per minute")
