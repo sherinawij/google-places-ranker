@@ -15,7 +15,7 @@ Google Places search, re-ranked by rating and review count, with AI review summa
 - Search results are cached in Redis per page (15-minute TTL), so repeated searches skip the Google API.
 - AI summaries are generated in parallel with a thread pool, cached per place in Redis, and loaded on demand for places outside the top 3.
 - A first search takes about 1 s; a repeated search takes about 20 ms.
-- Rate limiting per IP protects the search, summary and login routes.
+- Rate limiting per IP protects the search and summary routes.
 
 ## Getting started
 
