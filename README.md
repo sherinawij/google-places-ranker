@@ -2,6 +2,8 @@
 
 Google Places search, re-ranked by rating and review count, with AI review summaries.
 
+**Live demo:** [google-places-ranker.vercel.app](https://google-places-ranker.vercel.app)
+
 ## Features
 
 - Ranking that adjusts ratings for review volume
